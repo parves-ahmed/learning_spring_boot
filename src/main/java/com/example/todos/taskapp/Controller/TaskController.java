@@ -20,12 +20,8 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/add")
-    public ResponseEntity<Object> addTask(@RequestBody TaskDto taskDto){
-        if (taskDto.getTaskName() != null) {
-            taskService.createTask(taskDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Task: " + taskDto.getTaskName() + " ,Created Successfully");
-        }
-        return ResponseEntity.badRequest().body("Please Provide Task Name");
+    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDto));
     }
 
     @GetMapping(path = "/all")
