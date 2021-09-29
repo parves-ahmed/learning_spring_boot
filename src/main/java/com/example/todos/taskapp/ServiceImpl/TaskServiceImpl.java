@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskDto createTask(TaskDto taskDto) {
-        return this.mapToDto(taskRepository.save(mapToModel(taskDto)));
+        System.out.println("taskDto = " + taskDto);
+        return this.mapToDto(taskRepository.save(this.mapToModel(taskDto)));
     }
 
     @Override
@@ -36,8 +38,38 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public TaskDto getTaskById(Long id){
+        return this.mapToDto(taskRepository.findById(id).get());
+    }
+
+    @Override
+    @Transactional
+    public boolean updateTask(Long id, Map<String, Object> update){
+        boolean result = false;
+        try{
+            System.out.println("id = " + id);
+            System.out.println("update = " +update.get("taskName").toString());
+            TaskModel task = taskRepository.findById(id).get();
+            task.setTaskName(update.get("taskName").toString());
+            taskRepository.save(task);
+            result = true;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public TaskDto delete(TaskDto taskDto){
+        return this.mapToDto(taskRepository.save(this.mapToModel(taskDto)));
+    }
+
     public TaskModel mapToModel(TaskDto dto){
-        TaskModel model = modelMapper.map(dto, TaskModel.class);
+        TaskModel model = new TaskModel();
+        modelMapper.map(dto, model);
         return model;
     }
     public TaskDto mapToDto(TaskModel model){

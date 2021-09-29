@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDto {
+public class TaskDto extends CommonDto{
     String taskName;
+    String taskDescription;
 }
